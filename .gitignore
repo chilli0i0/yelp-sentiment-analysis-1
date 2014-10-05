@@ -1,6 +1,4 @@
 #Ignore List
-*.ppt*
-*.doc*
 *.class
 RemoteSystemsTempFiles/
 Servers/
