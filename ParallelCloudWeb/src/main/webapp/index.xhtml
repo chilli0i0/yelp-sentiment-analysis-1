@@ -1,0 +1,40 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Parallel Cloud</title>
+</h:head>
+<h:body>
+	<h:form>
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="false" />
+	</h:form>
+
+	<h:form id="form">
+		<h:panelGrid columns="3">
+			<p:outputLabel value="Click to start MapReduce job" for="mapReduce" />
+			<p:commandButton value="Start" action="#{yelpBean.preprocess}"
+				update="@form" disabled="#{yelpBean.preprocessed}" id="mapReduce"></p:commandButton>
+			<h:outputText></h:outputText>
+
+			<p:outputLabel for="numOfTrees" value="Enter number of trees:" />
+			<p:inputText id="numOfTrees" value="#{yelpBean.numberOfTrees}" />
+			<p:commandButton value="Train Reviews"
+				action="#{yelpBean.trainReviews}" disabled="#{yelpBean.trained}"
+				update="@form" />
+
+			<p:outputLabel for="review" value="Enter review to be predicted:" />
+			<p:inputTextarea id="review" value="#{yelpBean.review}" />
+			<p:commandButton value="Submit" action="#{yelpBean.predictRating}"
+				update="@form" />
+
+			<p:outputLabel value="Predicted rating:" />
+			<p:rating value="#{yelpBean.rating}" readonly="true" />
+			<h:outputText></h:outputText>
+		</h:panelGrid>
+	</h:form>
+
+</h:body>
+</html>
