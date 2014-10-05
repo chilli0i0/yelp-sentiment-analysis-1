@@ -1,5 +1,4 @@
 #Ignore List
-*.class
 RemoteSystemsTempFiles/
 Servers/
 .metadata/
