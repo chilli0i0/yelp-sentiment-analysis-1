@@ -58,11 +58,11 @@ public class Yelp extends Configured implements Tool {
 	    conf.setInputFormat(TextInputFormat.class);
 	    conf.setOutputFormat(TextOutputFormat.class);
 	    
-	    conf.addResource(new Path("/usr/local/hadoop/hadoop-2.3.0/etc/hadoop/core-site.xml"));
-	    conf.addResource(new Path("/usr/local/hadoop/hadoop-2.3.0/etc/hadoop/hdfs-site.xml"));
-	    conf.set("mapreduce.job.tracker", "agasthya:54311");
+	    conf.addResource(new Path("/usr/local/hadoop/etc/hadoop/core-site.xml"));
+	    conf.addResource(new Path("/usr/local/hadoop/etc/hadoop/hdfs-site.xml"));
+	    conf.set("mapreduce.job.tracker", "master:54311");
 	    conf.set("mapreduce.framework.name", "yarn");
-	    conf.set("yarn.resourcemanager.address", "agasthya:8032");
+	    conf.set("yarn.resourcemanager.address", "master:8032");
 	    
 	    FileInputFormat.addInputPath(conf, new Path(args[1]));
 	    FileOutputFormat.setOutputPath(conf, new Path(args[2]));
@@ -71,7 +71,7 @@ public class Yelp extends Configured implements Tool {
 	    logger.info("MapReduce Job Done!");
 	    FileSystem hdfs = FileSystem.get(conf);
 	    Path hdfsOutput = new Path(args[2] + "/part-00000");
-	    Path localFile = new Path("$HOME/output.csv");
+	    Path localFile = new Path("/home/hduser/output.csv");
 	    logger.info("Copying output file from " + hdfsOutput.toString() + " to local directory " + localFile.toString());
 	    hdfs.copyToLocalFile(hdfsOutput, localFile);
 	    logger.info("Copy to local directory done");

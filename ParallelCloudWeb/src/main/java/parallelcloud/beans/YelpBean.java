@@ -43,9 +43,9 @@ public class YelpBean {
 		try {
 			// Ugly and error-prone
 			process = Runtime.getRuntime().exec(command);
-			if (process.exitValue() != 0) {
+			/*if (process.exitValue() != 0) {
 				generateErrorMessage("Hadoop Job Error.");
-			}
+			}*/
 		} catch (IOException e) {
 			generateErrorMessage("Exception when running Hadoop job.");
 		}
@@ -69,7 +69,11 @@ public class YelpBean {
 
 	public void predictRating() {
 		String features = featureExtraction.extractFeatures(review).toString();
-		rating = classifier.predictRating(features);
+		try {
+		rating = classifier.predictRating(features); 
+		} catch(ArrayIndexOutOfBoundsException ex) {
+			generateErrorMessage("Error in prediction");
+		}
 	}
 
 	public boolean isPreprocessed() {
