@@ -20,26 +20,33 @@
 	</h:form>
 
 	<h:form id="form">
-		<h:panelGrid columns="3">
+		<h:panelGrid columns="2" >
 			<p:outputLabel value="Click to start MapReduce job" for="mapReduce" />
 			<p:commandButton value="Start" action="#{yelpBean.preprocess}"
 				update="@form" disabled="#{yelpBean.preprocessed}" id="mapReduce"></p:commandButton>
-			<h:outputText></h:outputText>
 
 			<p:outputLabel for="numOfTrees" value="Enter number of trees:" />
-			<p:inputText id="numOfTrees" value="#{yelpBean.numberOfTrees}" />
-			<p:commandButton value="Train Reviews"
-				action="#{yelpBean.trainReviews}" disabled="#{yelpBean.trained}"
-				update="@form" />
+			<h:panelGroup>
+				<h:panelGrid columns="1">
+					<p:inputText id="numOfTrees" value="#{yelpBean.numberOfTrees}" />
+					<p:commandButton value="Train Reviews"
+						action="#{yelpBean.trainReviews}" disabled="#{yelpBean.trained}"
+						update="@form" />
+				</h:panelGrid>
+			</h:panelGroup>
 
 			<p:outputLabel for="review" value="Enter review to be predicted:" />
-			<p:inputTextarea id="review" value="#{yelpBean.review}" />
-			<p:commandButton value="Submit" action="#{yelpBean.predictRating}"
-				update="@form" />
+			<h:panelGroup>
+				<h:panelGrid columns="1">
+					<p:inputTextarea id="review" value="#{yelpBean.review}"
+						autoResize="false" />
+					<p:commandButton value="Predict" action="#{yelpBean.predictRating}"
+						update="@form" disabled="#{!yelpBean.trained}" />
+				</h:panelGrid>
+			</h:panelGroup>
 
 			<p:outputLabel value="Predicted rating:" />
 			<p:rating value="#{yelpBean.rating}" readonly="true" />
-			<h:outputText></h:outputText>
 		</h:panelGrid>
 	</h:form>
 

@@ -50,16 +50,15 @@ public class RandomForestClassifier {
 	 * @param forest
 	 * @throws Exception
 	 */
-	public int predictRating(String review) throws ArrayIndexOutOfBoundsException {
+	public String predictRating(String review) throws ArrayIndexOutOfBoundsException, NullPointerException {
 		System.out.println("Review:" + review);
 		String[] testDataValues = new String[] { review };
 		Data test = DataLoader.loadData(data.getDataset(), testDataValues);
 		Random rng = RandomUtils.getRandom();
-		int label = -1;
 		Instance oneSample = test.get(0);
 		double classify = forest.classify(test.getDataset(), rng, oneSample);
-		label = data.getDataset()
-				.valueOf(0, String.valueOf((int) classify));
+		System.out.println("Classify: " + classify);
+		String label = data.getDataset().labels()[(int) classify];
 		System.out.println("Label: " + label);
 		return label;
 	}

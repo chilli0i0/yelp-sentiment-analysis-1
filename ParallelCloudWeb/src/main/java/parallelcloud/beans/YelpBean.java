@@ -3,6 +3,7 @@
  */
 package parallelcloud.beans;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.faces.application.FacesMessage;
@@ -22,10 +23,10 @@ import parallelcloud.preprocess.FeatureExtraction;
 @ManagedBean
 @ApplicationScoped
 public class YelpBean {
-	private boolean preprocessed = false;
+	private boolean preprocessed = checkIfMROutputExists();
 	private boolean trained = false;
 	private String review;
-	private int rating = 0;
+	private Integer rating = 0;
 	private RandomForestClassifier classifier;
 	private int numberOfTrees;
 	private static String TRAINING_FILE_PATH = "/home/hduser/output.csv";
@@ -49,12 +50,20 @@ public class YelpBean {
 		} catch (IOException e) {
 			generateErrorMessage("Exception when running Hadoop job.");
 		}
-		preprocessed = true;
+		preprocessed = checkIfMROutputExists();
+	}
+
+	private boolean checkIfMROutputExists() {
+		File file = new File(TRAINING_FILE_PATH);
+		if (file.exists() && !file.isDirectory()) {
+			return true;
+		}
+		return false;
 	}
 
 	private void generateErrorMessage(String message) {
 		FacesContext.getCurrentInstance()
-				.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_FATAL, "Fatal!",message));
+				.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fatal!",message));
 	}
 
 	public void trainReviews() {
@@ -70,8 +79,12 @@ public class YelpBean {
 	public void predictRating() {
 		String features = featureExtraction.extractFeatures(review).toString();
 		try {
-		rating = classifier.predictRating(features); 
+		rating = Integer.valueOf(classifier.predictRating(features));
 		} catch(ArrayIndexOutOfBoundsException ex) {
+			generateErrorMessage("Error in prediction");
+		} catch (NullPointerException ex) {
+			generateErrorMessage("No prediction returned from classifier");
+		} catch (NumberFormatException ex) {
 			generateErrorMessage("Error in prediction");
 		}
 	}
@@ -92,11 +105,11 @@ public class YelpBean {
 		this.review = review;
 	}
 
-	public int getRating() {
+	public Integer getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(Integer rating) {
 		this.rating = rating;
 	}
 
